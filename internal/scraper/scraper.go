@@ -12,9 +12,9 @@ import (
 
 // Struct for the dollar price
 type DollarPrice struct {
-	Buy       string    `json:"buy"`
-	Sell      string    `json:"sell"`
-	FetchedAt time.Time `json:"fetched_at"`
+	Buy       string `json:"buy"`
+	Sell      string `json:"sell"`
+	FetchedAt string `json:"fetched_at"`
 }
 
 // Global cache
@@ -48,11 +48,13 @@ func fetchDollarFromWeb() (*DollarPrice, error) {
 
 	buy := firstRow.Find("td").Eq(1).Text()  // 2nd td
 	sell := firstRow.Find("td").Eq(2).Text() // 3rd td
+	loc, _ := time.LoadLocation("America/Argentina/Buenos_Aires")
+	fetchedAt := time.Now().In(loc).Format(time.RFC3339)
 
 	return &DollarPrice{
 		Buy:       buy,
 		Sell:      sell,
-		FetchedAt: time.Now(),
+		FetchedAt: fetchedAt,
 	}, nil
 }
 
